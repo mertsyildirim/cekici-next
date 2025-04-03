@@ -2,36 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
-import 'leaflet/dist/leaflet.css';
-import L from 'leaflet';
-import type { LeafletMouseEvent } from 'leaflet';
 import type { Location } from './components/Map';
-
-// Leaflet varsayılan ikon hatası için düzeltme
-delete (L.Icon.Default.prototype as any)._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: '/marker-icon-2x.png',
-  iconUrl: '/marker-icon.png',
-  shadowUrl: '/marker-shadow.png',
-});
-
-// Leaflet bileşenlerini client-side olarak yükle
-const MapContainer = dynamic(
-  () => import('react-leaflet').then((mod) => mod.MapContainer),
-  { ssr: false }
-);
-const TileLayer = dynamic(
-  () => import('react-leaflet').then((mod) => mod.TileLayer),
-  { ssr: false }
-);
-const Marker = dynamic(
-  () => import('react-leaflet').then((mod) => mod.Marker),
-  { ssr: false }
-);
-const Popup = dynamic(
-  () => import('react-leaflet').then((mod) => mod.Popup),
-  { ssr: false }
-);
 
 // Map bileşenini dinamik olarak import ediyoruz ve SSR'ı devre dışı bırakıyoruz
 const MapComponent = dynamic(() => import('./components/Map'), {
@@ -42,7 +13,6 @@ const MapComponent = dynamic(() => import('./components/Map'), {
 });
 
 export default function Home() {
-  const istanbulPosition: [number, number] = [41.0082, 28.9784];
   const [isMounted, setIsMounted] = useState(false);
   const [pickupAddress, setPickupAddress] = useState('');
   const [dropoffAddress, setDropoffAddress] = useState('');
