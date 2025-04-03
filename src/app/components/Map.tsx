@@ -4,6 +4,37 @@ import 'leaflet/dist/leaflet.css';
 import 'leaflet-routing-machine';
 import { useEffect, useRef } from 'react';
 
+// Leaflet Routing Machine için tip tanımlamaları
+declare module 'leaflet' {
+  namespace Routing {
+    interface RoutingControlOptions {
+      waypoints: L.LatLng[];
+      routeWhileDragging?: boolean;
+      addWaypoints?: boolean;
+      fitSelectedRoutes?: boolean;
+      showAlternatives?: boolean;
+      show?: boolean;
+      lineOptions?: {
+        styles: { color: string; weight: number; }[];
+        extendToWaypoints: boolean;
+        missingRouteTolerance: number;
+      };
+      createMarker?: (i: number, waypoint: any, n: number) => L.Marker | null;
+    }
+
+    class Control {
+      constructor(options: RoutingControlOptions);
+      addTo(map: L.Map): this;
+      getContainer(): HTMLElement;
+      on(event: string, fn: (e: any) => void): this;
+    }
+
+    interface Control {
+      new (options: RoutingControlOptions): Control;
+    }
+  }
+}
+
 // Leaflet varsayılan ikonunu düzeltmek için
 const icon = L.icon({
   iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
@@ -151,7 +182,7 @@ function AddressHandler({ onClick, onAddressFound }: { onClick: (e: L.LeafletMou
 
 const Map = ({ pickupLocation, dropoffLocation, onLocationSelect, isSelectingPickup, isSelectingDropoff }: MapProps) => {
   const mapRef = useRef<L.Map | null>(null);
-  const routingControlRef = useRef<L.Routing.Control | null>(null);
+  const routingControlRef = useRef<any>(null);
 
   useEffect(() => {
     if (!mapRef.current) {
@@ -201,7 +232,7 @@ const Map = ({ pickupLocation, dropoffLocation, onLocationSelect, isSelectingPic
     if (!mapRef.current) return;
 
     // Önceki işaretçileri ve rotayı temizle
-    mapRef.current.eachLayer((layer) => {
+    mapRef.current.eachLayer((layer: any) => {
       if (layer instanceof L.Marker || layer instanceof L.Routing.Control) {
         mapRef.current?.removeLayer(layer);
       }
@@ -237,23 +268,21 @@ const Map = ({ pickupLocation, dropoffLocation, onLocationSelect, isSelectingPic
 
     // Her iki konum da varsa rota çiz
     if (pickupLocation && dropoffLocation) {
-      const routingControl = L.Routing.control({
+      const routingControl = (L as any).Routing.control({
         waypoints: [
           L.latLng(pickupLocation.lat, pickupLocation.lng),
           L.latLng(dropoffLocation.lat, dropoffLocation.lng)
         ],
-        routeWhileDragging: false,
+        show: false,
         addWaypoints: false,
-        draggableWaypoints: false,
+        routeWhileDragging: false,
         fitSelectedRoutes: true,
         showAlternatives: false,
-        show: false, // Rota talimatları panelini gizle
         lineOptions: {
-          styles: [{ color: '#3B82F6', weight: 6 }],
+          styles: [{ color: '#3B82F6', weight: 4 }],
           extendToWaypoints: true,
           missingRouteTolerance: 0
-        },
-        createMarker: () => null
+        }
       }).addTo(mapRef.current);
 
       // Rota talimatları panelini gizle
