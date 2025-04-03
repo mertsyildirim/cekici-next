@@ -5,11 +5,9 @@ const nextConfig = {
   },
   distDir: '.next',
   trailingSlash: true,
+  output: 'export',
   images: {
     unoptimized: true
-  },
-  experimental: {
-    appDir: true
   }
 };
 
