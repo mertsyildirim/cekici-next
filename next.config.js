@@ -3,11 +3,10 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true
   },
-  distDir: '.next',
-  trailingSlash: true,
-  output: 'export',
+  output: 'standalone',
   images: {
-    unoptimized: true
+    unoptimized: true,
+    domains: ['unpkg.com']
   }
 };
 
