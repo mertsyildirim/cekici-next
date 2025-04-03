@@ -1,7 +1,10 @@
+'use client';
+
 import { MapContainer, TileLayer, Marker, Popup, useMapEvents, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import 'leaflet-routing-machine';
+import 'leaflet-routing-machine/dist/leaflet-routing-machine.css';
 import { useEffect, useRef } from 'react';
 
 // Leaflet Routing Machine için tip tanımlamaları
@@ -45,7 +48,7 @@ const icon = L.icon({
   shadowSize: [41, 41]
 });
 
-interface Location {
+export interface Location {
   lat: number;
   lng: number;
 }

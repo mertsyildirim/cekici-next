@@ -5,15 +5,14 @@ import dynamic from 'next/dynamic';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import type { LeafletMouseEvent } from 'leaflet';
+import type { Location } from './components/Map';
 
 // Leaflet varsayılan ikon hatası için düzeltme
-const icon = L.icon({
-  iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-  shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
-  shadowSize: [41, 41],
+delete (L.Icon.Default.prototype as any)._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: '/marker-icon-2x.png',
+  iconUrl: '/marker-icon.png',
+  shadowUrl: '/marker-shadow.png',
 });
 
 // Leaflet bileşenlerini client-side olarak yükle
@@ -34,12 +33,11 @@ const Popup = dynamic(
   { ssr: false }
 );
 
-const Map = dynamic(() => import('./components/Map'), { ssr: false });
-
-interface Location {
-  lat: number;
-  lng: number;
-}
+// Map bileşenini dinamik olarak import ediyoruz ve SSR'ı devre dışı bırakıyoruz
+const MapComponent = dynamic(() => import('./components/Map'), {
+  ssr: false,
+  loading: () => <div className="w-full h-[500px] bg-gray-100 animate-pulse" />
+});
 
 export default function Home() {
   const istanbulPosition: [number, number] = [41.0082, 28.9784];
@@ -151,7 +149,7 @@ export default function Home() {
             <div className="flex-1">
               <div className="w-full h-[400px] rounded-xl shadow-lg overflow-hidden">
                 {isMounted && (
-                  <Map 
+                  <MapComponent 
                     pickupLocation={pickupLocation || undefined}
                     dropoffLocation={dropoffLocation || undefined}
                     onLocationSelect={handleLocationSelect}
