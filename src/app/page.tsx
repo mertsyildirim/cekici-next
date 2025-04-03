@@ -103,107 +103,121 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-white">
       {/* Hero Section */}
-      <section className="relative bg-primary/5 py-20">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-12">
-            <div className="flex-1 space-y-6">
-              <h1 className="text-5xl font-bold text-gray-900">
+      <section className="relative bg-gradient-to-b from-primary/5 to-white py-12 md:py-20">
+        <div className="container mx-auto px-4 max-w-7xl">
+          <div className="flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-12">
+            <div className="flex-1 space-y-6 text-center lg:text-left">
+              <h1 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight">
                 7/24 Çekici Hizmeti
               </h1>
-              <p className="text-xl text-gray-600">
+              <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto lg:mx-0">
                 Türkiye'nin her yerinde profesyonel çekici hizmeti. Acil ve planlı taşımalarınız için yanınızdayız.
               </p>
-              <button className="bg-red-600 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-red-700 inline-flex items-center gap-2">
-                <span className="animate-pulse text-2xl bg-white rounded-full w-11 h-11 flex items-center justify-center">🚨</span>
+              <button className="bg-red-600 text-white px-6 md:px-8 py-3 rounded-lg text-lg font-semibold hover:bg-red-700 transition-colors duration-200 inline-flex items-center gap-3 mx-auto lg:mx-0">
+                <span className="animate-pulse bg-white rounded-full w-10 h-10 flex items-center justify-center text-xl">🚨</span>
                 Acil Çekici Çağır
               </button>
             </div>
-            <div className="flex-1">
-              <div className="w-full h-[400px] rounded-xl shadow-lg overflow-hidden">
-                {isMounted && (
-                  <MapComponent 
-                    pickupLocation={pickupLocation || undefined}
-                    dropoffLocation={dropoffLocation || undefined}
-                    onLocationSelect={handleLocationSelect}
-                    isSelectingPickup={isSelectingPickup}
-                    isSelectingDropoff={isSelectingDropoff}
-                  />
-                )}
-              </div>
-              {/* Adres Seçim Alanları */}
-              <div className="mt-4 space-y-3">
-                <div className="relative">
-                  <input
-                    type="text"
-                    value={pickupAddress}
-                    onChange={(e) => {
-                      setPickupAddress(e.target.value);
-                      searchAddress(e.target.value);
-                    }}
-                    placeholder="Alınacak Adres"
-                    className="w-full p-3 border border-gray-300 rounded-lg pr-24"
-                  />
-                  <button
-                    onClick={() => {
-                      setIsSelectingPickup(true);
-                      setIsSelectingDropoff(false);
-                      setSearchResults([]);
-                    }}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700 transition-colors"
-                  >
-                    Haritadan Seç
-                  </button>
-                  {/* Arama Sonuçları Dropdown */}
-                  {searchResults.length > 0 && pickupAddress.length >= 3 && (
-                    <div className="absolute left-0 right-24 top-1/2 mt-8 bg-white rounded-lg shadow-lg border border-gray-200 max-h-60 overflow-y-auto z-50">
-                      {searchResults.map((result, index) => (
-                        <button
-                          key={index}
-                          onClick={() => handleAddressSelect(result, true)}
-                          className="w-full text-left px-4 py-2 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none"
-                        >
-                          {formatAddressDetails(result.address)}
-                        </button>
-                      ))}
-                    </div>
+
+            <div className="flex-1 w-full max-w-2xl lg:max-w-none">
+              <div className="bg-white p-4 rounded-2xl shadow-lg">
+                <div className="w-full h-[300px] md:h-[400px] rounded-xl overflow-hidden mb-4">
+                  {isMounted && (
+                    <MapComponent 
+                      pickupLocation={pickupLocation || undefined}
+                      dropoffLocation={dropoffLocation || undefined}
+                      onLocationSelect={handleLocationSelect}
+                      isSelectingPickup={isSelectingPickup}
+                      isSelectingDropoff={isSelectingDropoff}
+                    />
                   )}
                 </div>
-                
-                <div className="relative">
-                  <input
-                    type="text"
-                    value={dropoffAddress}
-                    onChange={(e) => {
-                      setDropoffAddress(e.target.value);
-                      searchAddress(e.target.value);
-                    }}
-                    placeholder="Bırakılacak Adres"
-                    className="w-full p-3 border border-gray-300 rounded-lg pr-24"
-                  />
-                  <button
-                    onClick={() => {
-                      setIsSelectingDropoff(true);
-                      setIsSelectingPickup(false);
-                      setSearchResults([]);
-                    }}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700 transition-colors"
-                  >
-                    Haritadan Seç
-                  </button>
-                  {/* Arama Sonuçları Dropdown */}
-                  {searchResults.length > 0 && dropoffAddress.length >= 3 && (
-                    <div className="absolute left-0 right-24 top-1/2 mt-8 bg-white rounded-lg shadow-lg border border-gray-200 max-h-60 overflow-y-auto z-50">
-                      {searchResults.map((result, index) => (
-                        <button
-                          key={index}
-                          onClick={() => handleAddressSelect(result, false)}
-                          className="w-full text-left px-4 py-2 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none"
-                        >
-                          {formatAddressDetails(result.address)}
-                        </button>
-                      ))}
+
+                {/* Adres Seçim Alanları */}
+                <div className="space-y-3">
+                  <div className="relative">
+                    <div className="flex items-center space-x-2 bg-gray-50 p-2 rounded-lg">
+                      <div className="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-blue-100 rounded-full">
+                        <span className="text-blue-600 text-lg">📍</span>
+                      </div>
+                      <input
+                        type="text"
+                        value={pickupAddress}
+                        onChange={(e) => {
+                          setPickupAddress(e.target.value);
+                          searchAddress(e.target.value);
+                        }}
+                        placeholder="Alınacak Adres"
+                        className="flex-1 p-2 bg-transparent border-none focus:ring-0 focus:outline-none text-gray-900"
+                      />
+                      <button
+                        onClick={() => {
+                          setIsSelectingPickup(true);
+                          setIsSelectingDropoff(false);
+                          setSearchResults([]);
+                        }}
+                        className="flex-shrink-0 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700 transition-colors"
+                      >
+                        Haritadan Seç
+                      </button>
                     </div>
-                  )}
+                    {/* Arama Sonuçları Dropdown */}
+                    {searchResults.length > 0 && pickupAddress.length >= 3 && (
+                      <div className="absolute left-0 right-0 mt-1 bg-white rounded-lg shadow-lg border border-gray-200 max-h-60 overflow-y-auto z-50">
+                        {searchResults.map((result, index) => (
+                          <button
+                            key={index}
+                            onClick={() => handleAddressSelect(result, true)}
+                            className="w-full text-left px-4 py-3 hover:bg-gray-50 focus:bg-gray-50 focus:outline-none border-b last:border-b-0 border-gray-100"
+                          >
+                            {formatAddressDetails(result.address)}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                  
+                  <div className="relative">
+                    <div className="flex items-center space-x-2 bg-gray-50 p-2 rounded-lg">
+                      <div className="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-red-100 rounded-full">
+                        <span className="text-red-600 text-lg">📍</span>
+                      </div>
+                      <input
+                        type="text"
+                        value={dropoffAddress}
+                        onChange={(e) => {
+                          setDropoffAddress(e.target.value);
+                          searchAddress(e.target.value);
+                        }}
+                        placeholder="Bırakılacak Adres"
+                        className="flex-1 p-2 bg-transparent border-none focus:ring-0 focus:outline-none text-gray-900"
+                      />
+                      <button
+                        onClick={() => {
+                          setIsSelectingDropoff(true);
+                          setIsSelectingPickup(false);
+                          setSearchResults([]);
+                        }}
+                        className="flex-shrink-0 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700 transition-colors"
+                      >
+                        Haritadan Seç
+                      </button>
+                    </div>
+                    {/* Arama Sonuçları Dropdown */}
+                    {searchResults.length > 0 && dropoffAddress.length >= 3 && (
+                      <div className="absolute left-0 right-0 mt-1 bg-white rounded-lg shadow-lg border border-gray-200 max-h-60 overflow-y-auto z-50">
+                        {searchResults.map((result, index) => (
+                          <button
+                            key={index}
+                            onClick={() => handleAddressSelect(result, false)}
+                            className="w-full text-left px-4 py-3 hover:bg-gray-50 focus:bg-gray-50 focus:outline-none border-b last:border-b-0 border-gray-100"
+                          >
+                            {formatAddressDetails(result.address)}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
