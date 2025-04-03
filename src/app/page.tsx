@@ -36,7 +36,9 @@ const Popup = dynamic(
 // Map bileşenini dinamik olarak import ediyoruz ve SSR'ı devre dışı bırakıyoruz
 const MapComponent = dynamic(() => import('./components/Map'), {
   ssr: false,
-  loading: () => <div className="w-full h-[500px] bg-gray-100 animate-pulse" />
+  loading: () => <div className="w-full h-[500px] bg-gray-100 animate-pulse flex items-center justify-center">
+    <div className="text-gray-500">Harita yükleniyor...</div>
+  </div>
 });
 
 export default function Home() {

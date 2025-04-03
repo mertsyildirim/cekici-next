@@ -8,6 +8,13 @@ const nextConfig = {
   output: 'export',
   images: {
     unoptimized: true
+  },
+  webpack: (config) => {
+    config.externals.push({
+      'leaflet': 'L',
+      'leaflet-routing-machine': 'Routing'
+    });
+    return config;
   }
 };
 
