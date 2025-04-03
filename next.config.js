@@ -3,9 +3,12 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true
   },
-  output: 'export',
+  output: 'standalone',
   images: {
     unoptimized: true
+  },
+  experimental: {
+    appDir: true
   }
 };
 

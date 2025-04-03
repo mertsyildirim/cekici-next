@@ -18,6 +18,47 @@ interface MapProps {
   isSelectingDropoff?: boolean;
 }
 
+// Rota kontrolü için ayrı bir bileşen
+const RoutingControl = ({ pickupLocation, dropoffLocation }: { pickupLocation: Location, dropoffLocation: Location }) => {
+  const map = useMap();
+  const routingControlRef = useRef<any>(null);
+
+  useEffect(() => {
+    if (!pickupLocation || !dropoffLocation) return;
+
+    import('leaflet-routing-machine').then((Routing) => {
+      if (routingControlRef.current) {
+        routingControlRef.current.remove();
+      }
+
+      routingControlRef.current = (Routing as any).control({
+        waypoints: [
+          [pickupLocation.lat, pickupLocation.lng],
+          [dropoffLocation.lat, dropoffLocation.lng]
+        ],
+        routeWhileDragging: false,
+        addWaypoints: false,
+        draggableWaypoints: false,
+        fitSelectedRoutes: true,
+        showAlternatives: false,
+        lineOptions: {
+          styles: [{ color: '#0066CC', weight: 6 }]
+        }
+      });
+
+      routingControlRef.current.addTo(map);
+    });
+
+    return () => {
+      if (routingControlRef.current) {
+        routingControlRef.current.remove();
+      }
+    };
+  }, [map, pickupLocation, dropoffLocation]);
+
+  return null;
+};
+
 const Map: React.FC<MapProps> = ({
   pickupLocation,
   dropoffLocation,
@@ -25,7 +66,6 @@ const Map: React.FC<MapProps> = ({
   isSelectingPickup,
   isSelectingDropoff
 }) => {
-  const routingControlRef = useRef<any>(null);
   const istanbulPosition: [number, number] = [41.0082, 28.9784];
 
   useEffect(() => {
@@ -73,34 +113,6 @@ const Map: React.FC<MapProps> = ({
     return null;
   };
 
-  // Rota kontrolünü yönet
-  useEffect(() => {
-    if (!pickupLocation || !dropoffLocation) return;
-
-    import('leaflet-routing-machine').then((Routing) => {
-      if (routingControlRef.current) {
-        routingControlRef.current.remove();
-      }
-
-      routingControlRef.current = (Routing as any).control({
-        waypoints: [
-          [pickupLocation.lat, pickupLocation.lng],
-          [dropoffLocation.lat, dropoffLocation.lng]
-        ],
-        routeWhileDragging: false,
-        addWaypoints: false,
-        draggableWaypoints: false,
-        fitSelectedRoutes: true,
-        showAlternatives: false,
-        lineOptions: {
-          styles: [{ color: '#0066CC', weight: 6 }]
-        }
-      });
-
-      routingControlRef.current.addTo(map);
-    });
-  }, [pickupLocation, dropoffLocation]);
-
   return (
     <MapContainer
       center={istanbulPosition}
@@ -112,6 +124,9 @@ const Map: React.FC<MapProps> = ({
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       />
       <MapEvents />
+      {pickupLocation && dropoffLocation && (
+        <RoutingControl pickupLocation={pickupLocation} dropoffLocation={dropoffLocation} />
+      )}
       {pickupLocation && (
         <Marker position={[pickupLocation.lat, pickupLocation.lng]} />
       )}
