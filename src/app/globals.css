@@ -35,3 +35,6 @@
     text-wrap: balance;
   }
 } 
+.test-check {
+  @apply bg-red-500 text-white p-4;
+}
