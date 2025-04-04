@@ -5,14 +5,11 @@ module.exports = {
   "./components/**/*.{js,ts,jsx,tsx}"
  ],
   safelist: [
-    'test-check',
-    'btn-primary',
-    'btn-secondary',
-    'btn-outline',
-    'input-field',
-    'card',
-    'text-balance'
-  ],
+  'bg-red-600', 'text-white', 'rounded-lg', 'text-center',
+  'container', 'max-w-7xl', 'shadow-lg', 'hover:bg-red-700',
+  'bg-white', 'text-gray-600', 'text-primary', 'bg-gradient-to-b',
+  'from-primary/5', 'to-white', 'bg-gray-50', 'bg-blue-100', 'bg-red-100'
+],
   theme: {
     extend: {
       colors: {
